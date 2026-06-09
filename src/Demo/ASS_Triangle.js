@@ -47,11 +47,13 @@ class ASS_Triangle{
 
     mouseButtonDown(type){
         this.updatePosition();
+        this.interactedWith = true;
     }
     mouseMoved(){
         if(this.world.worldView.currentButtonDown==='none') return;
 
         this.updatePosition();
+        this.interactedWith = true;
     }
     updatePosition(){
         this.mouseX = this.world.worldView.currentXCanvas;
@@ -99,6 +101,12 @@ class ASS_Triangle{
     }
 
 	drawCanvas(ctx){
+        if(!this.interactedWith){
+            ctx.font = "20px arial";
+            ctx.fillStyle = 'white';
+            ctx.fillText('click or drag to move free side',5,25);
+        }
+
         let camera = this.world.camera;
         ctx.lineWidth = 2;
         ctx.strokeStyle = 'white';

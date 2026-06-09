@@ -58,6 +58,7 @@ class TriangleCenters{
 
     pointMoved(point){
         this.recalculate();
+        this.interactedWith = true;
     }
 
     //forwarded from DemoSwitcher
@@ -178,6 +179,11 @@ class TriangleCenters{
     }
 
 	drawCanvas(ctx){
+        if(!this.interactedWith){
+            ctx.font = "20px arial";
+            ctx.fillStyle = 'white';
+            ctx.fillText('drag points to change the triangle',5,25);
+        }
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 4;
         CtxAlgs.drawLine(this.pointA.x,this.pointA.y,this.pointB.x,this.pointB.y,ctx);

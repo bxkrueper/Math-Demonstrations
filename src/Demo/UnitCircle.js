@@ -90,9 +90,11 @@ class UnitCircle{
         if(this.world.worldView.currentButtonDown==='none') return;
 
         this.updatePosition();
+        this.interactedWith = true;
     }
     mouseButtonDown(type){
         this.updatePosition();
+        this.interactedWith = true;
     }
     updatePosition(){
         this.mouseXWorld = this.world.worldView.currentXWorld;
@@ -124,6 +126,12 @@ class UnitCircle{
     }
 
 	drawCanvas(ctx){
+        if(!this.interactedWith){
+            ctx.font = "20px arial";
+            ctx.fillStyle = 'white';
+            ctx.fillText('click or drag to change angle',5,25);
+        }
+
         let camera = this.world.camera;
         ctx.lineWidth = 4;
         ctx.strokeStyle = 'white';
