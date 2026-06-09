@@ -1,0 +1,131 @@
+<!doctype html>
+
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body onload = 'load()'>
+
+<div id="menuStrip" class="topMenu">
+	<select class="topMenu" id="demoSelect" onchange="worldView.world.demoSwitcher.optionSelected()">
+        <option value="none">Choose Demo Object</option>
+		<option value="Unit_Circle">Unit Circle</option>
+        <option value="ASS_Triangle">ASS Triangle</option>
+		<option value="Triangle_Centers">Triangle Centers</option>
+    </select>
+
+	<span id="Unit_Circle_options" hidden>
+		<label>Radians</label> <input type="radio" id="unit_circle_radian_radio" name="angle_option" value="radian" onclick="worldView.world.demoSwitcher.optionUpdated(this)">
+    	<label>Degrees</label> <input type="radio" id="unit_circle_degree_radio" name="angle_option" value="degree"  onclick="worldView.world.demoSwitcher.optionUpdated(this)">
+		<select class="topMenu" id="unit_circle_display_select" onchange="worldView.world.demoSwitcher.optionUpdated(this)">
+			<option value="coordinates">Coordinates</option>
+			<option value="sin">sin</option>
+			<option value="cos">cos</option>
+			<option value="tan">tan</option>
+			<option value="csc">csc</option>
+			<option value="sec">sec</option>
+			<option value="cot">cot</option>
+			<option value="all_lines">All lines</option>
+		</select>
+    </span>
+
+    <span id="ASS_Triangle_options" hidden>
+        Angle 1:
+        <input id="ASS_angle" type="number" min="1" max="179" style="width: 3em;" oninput="worldView.world.demoSwitcher.optionUpdated(this)">
+        Side 1:
+        <input id="ASS_side1" type="number" min="1" style="width: 3em;" oninput="worldView.world.demoSwitcher.optionUpdated(this)">
+        Side 2:
+        <input id="ASS_side2" type="number" min="1" style="width: 3em;" oninput="worldView.world.demoSwitcher.optionUpdated(this)">
+		&nbsp;&nbsp;&nbsp;Show Lables
+		<input type="checkbox" id="ASS_showLablesCheckbox" oninput="worldView.world.demoSwitcher.optionUpdated(this)">
+    </span>
+
+	<span id="Triangle_Centers_options" hidden>
+		<select class="topMenu" id="triangle_centers_type_select" onchange="worldView.world.demoSwitcher.optionUpdated(this)">
+			<option value="incenter">Incenter</option>
+			<option value="circumcenter">Circumcenter</option>
+			<option value="centroid">Centroid</option>
+			<option value="orthocenter">Orthocenter</option>
+			<option value="all_centers">All centers</option>
+		</select>
+		&nbsp;&nbsp;&nbsp;Show Lables
+		<input type="checkbox" id="Triangle_Centers_showLablesCheckbox" oninput="worldView.world.demoSwitcher.optionUpdated(this)">
+    </span>
+
+</div>
+
+<canvas id="demoCanvas"></canvas>
+
+<script src="src/GameEngine/DebugToggle.js"></script>
+<script src="src/GameEngine/DisplayUpdaterObject.js" ></script>
+<script src="src/GameEngine/MoveZoomCamera.js"></script>
+<script src="src/GameEngine/Timer.js"></script>
+<script src="src/GameEngine/World.js"></script>
+<script src="src/GameEngine/WorldView.js"></script>
+
+<script src="src/Demo/DemoWorld.js"></script>
+<script src="src/Demo/DemoSwitcher.js"></script>
+<script src="src/Demo/DemoBack.js"></script>
+<script src="src/Demo/NullObject.js"></script>
+<script src="src/Demo/ASS_Triangle.js"></script>
+<script src="src/Demo/UnitCircle.js"></script>
+<script src="src/Demo/TriangleCenters.js"></script>
+
+<script src="src/Demo/DraggablePoint.js"></script>
+
+<script src="src/MyLibraries/CtxAlgs.js"></script>
+<script src="src/MyLibraries/MyMath.js"></script>
+<script src="src/MyLibraries/SortedLinkedList.js"></script>
+<script src="src/MyLibraries/LinearAlgebra.js"></script>
+
+
+
+
+
+
+
+<script type="text/javascript">
+"use strict";
+
+	var worldView;
+    var supportsTouch;
+
+	function load(){
+		supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
+    	console.log('supportsTouch:' + supportsTouch);
+
+		var canvas = document.getElementById("demoCanvas");
+		var ctx = canvas.getContext("2d");
+
+        _setUpCanvasContainer(canvas);
+
+		worldView = new WorldView(ctx);
+		let world = new DemoWorld();
+		worldView.world = world;
+	}
+    function _setUpCanvasContainer(canvas){
+		let dims = _getSpaceForContainer();
+		canvas.width  = dims.width;
+		canvas.height = dims.height;
+
+		window.addEventListener("resize", function(){
+			recalculateContainerDims();
+		});
+	}
+	function _getSpaceForContainer(){
+		let rect = document.getElementById("menuStrip").getBoundingClientRect();//absolute position
+		return {width:window.innerWidth, height: window.innerHeight-(rect.bottom-rect.top)}
+	}
+	function recalculateContainerDims(){
+		let dims = _getSpaceForContainer();
+        let canvas = worldView.canvas;
+		canvas.width  = dims.width;
+		canvas.height = dims.height;
+	}
+	
+</script>
+
+</body>
+
+</html>
