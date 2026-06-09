@@ -27,9 +27,15 @@ class TriangleCenters{
         document.getElementById("Triangle_Centers_options").hidden = false;
 
         this.constructPoints();
+        if(this.madeAlready){
+            this.world.add(this.pointA);this.world.add(this.pointB);this.world.add(this.pointC);
+        }
 	}
     doOnWorldViewSet(){
-        this.constructPoints();
+        if(!this.madeAlready){
+            this.constructPoints();
+            this.world.add(this.pointA);this.world.add(this.pointB);this.world.add(this.pointC);
+        }
     }
     doOnDelete(){
         document.getElementById("Triangle_Centers_options").hidden = true;
@@ -46,8 +52,6 @@ class TriangleCenters{
         this.pointB = new DraggablePoint(camera.canvasWidth*0.20,camera.canvasHeight*0.5,7,this,this.pointMoved,'screen');
         this.pointC = new DraggablePoint(camera.canvasWidth*0.6,camera.canvasHeight*0.5,7,this,this.pointMoved,'screen');
         
-        this.world.add(this.pointA);this.world.add(this.pointB);this.world.add(this.pointC);
-
         this.recalculate();
         this.madeAlready = true;
     }
