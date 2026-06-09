@@ -15,27 +15,41 @@ class TriangleCenters{
         document.getElementById("triangle_centers_type_select").value = 'incenter';
         this.displayChoice = 'incenter';
 
-        this.pointA = new DraggablePoint(150,200,7,this,this.pointMoved,'screen');
-        this.pointB = new DraggablePoint(400,300,7,this,this.pointMoved,'screen');
-        this.pointC = new DraggablePoint(200,600,7,this,this.pointMoved,'screen');
-
+        this.madeAlready = false;
         console.log('triangle centers constructed');
 	}
 
 	//Override
 	doOnAdd(){
 		this.world.addEventListener(this,'drawCanvas',this.drawCanvas,this.world.priorities['DemoObjects']);
+        this.world.addEventListener(this,'doOnWorldViewSet',this.doOnWorldViewSet);
 
         document.getElementById("Triangle_Centers_options").hidden = false;
 
+        this.constructPoints();
+	}
+    doOnWorldViewSet(){
+        this.constructPoints();
+    }
+    doOnDelete(){
+        document.getElementById("Triangle_Centers_options").hidden = true;
+         this.world.delete(this.pointA);this.world.delete(this.pointB);this.world.delete(this.pointC);
+    }
+
+    constructPoints(){
+        if(this.madeAlready) return;
+
+        let camera = this.world.camera;
+        if(camera.canvasHeight===0) return;
+
+        this.pointA = new DraggablePoint(camera.canvasWidth*0.35,camera.canvasHeight*0.2,7,this,this.pointMoved,'screen');
+        this.pointB = new DraggablePoint(camera.canvasWidth*0.20,camera.canvasHeight*0.5,7,this,this.pointMoved,'screen');
+        this.pointC = new DraggablePoint(camera.canvasWidth*0.6,camera.canvasHeight*0.5,7,this,this.pointMoved,'screen');
         
         this.world.add(this.pointA);this.world.add(this.pointB);this.world.add(this.pointC);
 
         this.recalculate();
-	}
-    doOnDelete(){
-        document.getElementById("Triangle_Centers_options").hidden = true;
-         this.world.delete(this.pointA);this.world.delete(this.pointB);this.world.delete(this.pointC);
+        this.madeAlready = true;
     }
 
     pointMoved(point){
