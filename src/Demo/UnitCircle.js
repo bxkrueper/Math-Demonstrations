@@ -43,6 +43,8 @@ class UnitCircle{
         this.pointOnCircleY = Math.sin(Math.PI/6);
         this.significantAngleInfo = UnitCircle.significantAngleInfo;
 
+        this.windingNumber = 0;
+
         console.log('unit circle constructed');
 	}
 
@@ -91,8 +93,18 @@ class UnitCircle{
 
         this.updatePosition();
         this.interactedWith = true;
+
+        let prevY = this.world.worldView.lastYWorld;
+        if(this.mouseXWorld>0){
+            if(this.mouseYWorld>0 && prevY<0){
+                this.windingNumber++;
+            }else if(this.mouseYWorld<0 && prevY>0){
+                this.windingNumber--;
+            }
+        }
     }
     mouseButtonDown(type){
+        this.windingNumber = 0;
         this.updatePosition();
         this.interactedWith = true;
     }
@@ -122,7 +134,7 @@ class UnitCircle{
             let nextSigAngle = significantAngleInfo[i+1].radianValue;
             if(angle<(significantAngle+nextSigAngle)/2) return i;
         }
-        return significantAngleInfo.length-1;
+        return 0;//changed to just return 0 instead of the last index so that it would highlight when picking degree values close to 360
     }
 
 	drawCanvas(ctx){
@@ -194,17 +206,31 @@ class UnitCircle{
             ctx.font = "25px computer modern";
             if(this.measureType==='radian'){
                 let numerator = this.significantAngleInfo[i].radianNumerator, denominator = this.significantAngleInfo[i].radianDenominator;
+                numerator += this.windingNumber*denominator*2;
+
                 if(numerator===0){
                     ctx.fillText('0',angleTextX,angleTextY);
-                }else if(denominator===1){
-                    let numText = numerator===1?'':numerator.toString();
+                    continue;
+                }
+
+                let numText;
+                if(numerator===1){
+                    numText = '';
+                }else if(numerator===-1){
+                    numText = '-';
+                }else{
+                    numText = numerator.toString();
+                }
+                
+                if(denominator===1){
                     ctx.fillText(numText + '\u03C0',angleTextX,angleTextY);
                 }else{
-                    let numText = numerator===1?'':numerator.toString();
                     CtxAlgs.drawFraction(angleTextX,angleTextY,numText + '\u03C0',denominator,ctx);
                 }
             }else{//degrees
-                ctx.fillText(this.significantAngleInfo[i].degreeValue + '\u00B0',angleTextX,angleTextY);
+                let degreeValue = this.significantAngleInfo[i].degreeValue;
+                degreeValue += this.windingNumber*360;
+                ctx.fillText(degreeValue + '\u00B0',angleTextX,angleTextY);
             }
             // let label1Width = ctx.measureText(this.side1.toString()).width
             // ctx.fillText('a',angleTextX,angleTextY);
