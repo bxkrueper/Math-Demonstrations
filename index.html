@@ -77,7 +77,7 @@
 <script src="src/MyLibraries/CtxAlgs.js"></script>
 <script src="src/MyLibraries/MyMath.js"></script>
 <script src="src/MyLibraries/SortedLinkedList.js"></script>
-<script src="src/MyLibraries/LinearAlgebra.js"></script>
+<!-- <script src="src/MyLibraries/LinearAlgebra.js"></script> -->
 
 
 
@@ -123,6 +123,139 @@
 		canvas.width  = dims.width;
 		canvas.height = dims.height;
 	}
+
+// 	function lazyLoadScript(url) {
+// 		return new Promise((resolve, reject) => {
+// 			// Prevent loading the same script multiple times
+// 			if (document.querySelector(`script[src="${url}"]`)) {
+// 				return resolve();
+// 			}
+
+// 			const script = document.createElement('script');
+// 			script.src = url;
+// 			script.async = true; // Prevents parser-blocking
+
+// 			script.onload = () => resolve();
+// 			script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
+
+// 			document.body.appendChild(script);
+// 		});
+// 	}
+
+// 	function loadScript1(url){//does work without server, but has async issues
+// 		// Prevent loading the same script multiple times
+// 		if (document.querySelector(`script[src="${url}"]`)) {
+// 			return;
+// 		}
+
+// 		const script = document.createElement('script');
+// 		script.src = url;
+// 		// script.async = true; // Prevents parser-blocking
+
+// 		// script.onload = () => resolve();
+// 		// script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
+
+// 		document.body.appendChild(script);
+// 	}
+
+// 	function loadScript(url,callback){
+// 		// Prevent loading the same script multiple times
+// 		if (document.querySelector(`script[src="${url}"]`)) {
+// 			return;
+// 		}
+
+// 		let myPromise = new Promise(function(resolve, reject) {
+
+// 			// Code that may take some time
+// 			const script = document.createElement('script');
+// 			script.src = url;
+// 			script.onload = () => resolve();
+// 			script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
+// 			document.body.appendChild(script);
+
+// 			resolve("OK"); // when successful
+// 			reject("Error");  // when error
+// 		});
+
+// 		myPromise.then(
+// 			function(value) { /* code if success */ 
+// 				console.log('success');
+// 				callback(); },
+// 			function(value) { /* code if error */ 
+// 				console.log('error in promise'); }
+// 		);
+		
+// 	}
+
+
+
+// 	async function loadScriptAsync(url) {
+// 		// Code that may take some time
+// 		const script = document.createElement('script');
+// 		script.src = url;
+// 		// script.onload = () => resolve();
+// 		// script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
+// 		document.body.appendChild(script);
+// 	}
+
+// function loadScript2(url,callback) {
+//   console.log("Fetching user...");
+
+//   // Handle the result asynchronously using a callback
+//   loadScriptAsync(url)
+//     .then(user => {
+//       console.log('User found: ');
+// 	  callback();
+//     })
+//     .catch(err => {
+//       console.error("Error:", err);
+//     });
+
+//   console.log("This prints BEFORE the user data arrives!");
+// }
+
+
+
+
+
+
+
+
+
+// to call callback after the library actually finished, you need to await a promise inside an async function
+//(call this)
+async function loadScript(url,callback) {
+	// Prevent loading the same script multiple times
+	if (!document.querySelector(`script[src="${url}"]`)) {
+		
+		console.log('starting to load script from ' + url)
+
+		// Halts execution inside this block until the script completely loads
+    	await new Promise((resolve, reject) => {
+			const script = document.createElement('script');
+			script.src = url;
+			script.onload = () => resolve();
+			script.onerror = () => reject(new Error(`Script load error for ${url}`));
+			document.head.appendChild(script);
+		});
+
+		console.log("script loaded from " + url);
+	}
+
+    // Executes safely immediately after loading finishes
+	callback();
+}
+	//support function for loadScript
+	// function loadLibraryAsync(url) {
+	// 	return new Promise((resolve, reject) => {
+	// 		const script = document.createElement('script');
+	// 		script.src = url;
+	// 		script.onload = () => resolve();
+	// 		script.onerror = () => reject(new Error(`Script load error for ${url}`));
+	// 		document.head.appendChild(script);
+	// 	});
+	// }
+
 	
 </script>
 

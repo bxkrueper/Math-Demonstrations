@@ -17,6 +17,8 @@ class TriangleCenters{
 
         this.madeAlready = false;
         console.log('triangle centers constructed');
+
+        this.isT = true;
 	}
 
 	//Override
