@@ -22,7 +22,8 @@ class DemoSwitcher{
             document.getElementById("demoSelect").value = name;
         }
 
-		this.world.add(this.activeObject);
+
+		this.addObjectMaybeLoad(this.activeObject);
 	}
 
     optionSelected(){
@@ -32,7 +33,7 @@ class DemoSwitcher{
 
         this.world.delete(this.activeObject);
         this.activeObject = newObject;
-        this.world.add(newObject);
+        this.addObjectMaybeLoad(newObject);
 
         window.location.hash = choice;
     }
@@ -57,6 +58,19 @@ class DemoSwitcher{
 
         this.storage[name] = object;
         return object;
+    }
+
+
+    addObjectMaybeLoad(newObject){
+        let world = this.world;
+        if(newObject.isT){
+            loadScript('src/MyLibraries/LinearAlgebra.js',function(){
+                world.add(newObject);
+                world.worldView.redraw();
+            });
+        }else{
+            this.world.add(newObject);
+        }
     }
 
 }
